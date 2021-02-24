@@ -1,0 +1,13 @@
+<configuration xmlns="http://jetbrains.com/rider/schemas/config">
+    <global>
+        <allowModAddCommand>true</allowModAddCommand>
+    </global>
+    <commands>
+        
+    </commands>
+    <credentials>
+        <username>exampleUsername</username>
+        <password>examplePassword</password>
+        <platform>Twitch</platform>
+    </credentials>    
+</configuration>

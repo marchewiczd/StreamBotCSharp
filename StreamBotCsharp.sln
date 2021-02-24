@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamBotCsharp", "StreamBotCsharp\StreamBotCsharp.csproj", "{2FC3796B-0D80-465F-8FD1-C49985902638}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IrcClient", "IrcClient\IrcClient.csproj", "{77DCBAE8-CADA-41CE-B462-D7EA42C349BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamBotTests", "StreamBotTests\StreamBotTests.csproj", "{BB9E9EF0-E2BB-471C-BBF6-FDAB2F4931AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FC3796B-0D80-465F-8FD1-C49985902638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FC3796B-0D80-465F-8FD1-C49985902638}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FC3796B-0D80-465F-8FD1-C49985902638}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FC3796B-0D80-465F-8FD1-C49985902638}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77DCBAE8-CADA-41CE-B462-D7EA42C349BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77DCBAE8-CADA-41CE-B462-D7EA42C349BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77DCBAE8-CADA-41CE-B462-D7EA42C349BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77DCBAE8-CADA-41CE-B462-D7EA42C349BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB9E9EF0-E2BB-471C-BBF6-FDAB2F4931AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB9E9EF0-E2BB-471C-BBF6-FDAB2F4931AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB9E9EF0-E2BB-471C-BBF6-FDAB2F4931AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB9E9EF0-E2BB-471C-BBF6-FDAB2F4931AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
