@@ -80,5 +80,38 @@ namespace IrcClient.Commands.Responses
                     .Insert(firstUsernameEntryIndex, username);
             }
         }
+        
+        public string Channel 
+        {
+            get => this.RawData.Substring(this.ChannelIndex, this.ChannelStringLength);
+
+            set =>
+                this.RawData = this.RawData
+                    .Remove(this.ChannelIndex, this.ChannelStringLength)
+                    .Insert(this.PayloadIndex + 1, value);
+        }
+        
+        public int ChannelIndex
+        {
+            get
+            {
+                return this.PayloadIndex + 1;
+            }
+        }
+
+        protected int ChannelStringLength
+        {
+            get
+            {
+                int len = this.RawData.IndexOf(' ', this.ChannelIndex) - this.PayloadIndex - 1;
+                
+                if (len < 0)
+                {
+                    return this.RawData.Length - this.ChannelIndex;
+                }
+
+                return len;
+            }
+        }
     }
 }
