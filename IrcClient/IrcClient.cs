@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading.Tasks;
+using IrcClient.Commands.Responses;
 
 namespace IrcClient
 {
@@ -25,11 +27,18 @@ namespace IrcClient
                         _outputStream = new StreamWriter(_tcpClient.GetStream());
         
                         // Try to join the room
-                        _outputStream.WriteLine("PASS " + password);
-                        _outputStream.WriteLine("NICK " + userName);
-                        _outputStream.WriteLine("USER " + userName + " 8 * :" + userName);
-                        _outputStream.WriteLine("JOIN #" + channel);
-                        _outputStream.Flush();
+                        // _outputStream.WriteLine("PASS " + password);
+                        // _outputStream.Flush();
+                        // _outputStream.WriteLine("NICK " + userName);
+                        // _outputStream.Flush();
+                        // _outputStream.WriteLine("JOIN #" + channel);
+                        // _outputStream.Flush();
+
+                        Task readTask = Task.Factory.StartNew(this.ReadMessage);
+                        Task writeTask = Task.Factory.StartNew(this.WriteMessage);
+
+                        readTask.Wait();
+                        writeTask.Wait();
                     }
                     catch (Exception ex)
                     {
@@ -63,16 +72,20 @@ namespace IrcClient
                     }
                 }
         
-                public string ReadMessage()
+                public void ReadMessage()
                 {
-                    try
+                    while (true)
                     {
-                        string message = _inputStream.ReadLine();
-                        return message;
+                        Console.WriteLine(_inputStream.ReadLine());                        
                     }
-                    catch (Exception ex)
+                }
+                
+                public string WriteMessage()
+                {
+                    while (true)
                     {
-                        return "Error receiving message: " + ex.Message;
+                        _outputStream.WriteLine(Console.ReadLine());
+                        _outputStream.Flush();
                     }
                 }
             }
