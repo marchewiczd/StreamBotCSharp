@@ -20,6 +20,21 @@ namespace IrcClient.Commands.Responses
 
         private int UsernameLength => this.RawData.IndexOf("!", StringComparison.Ordinal) - 1;
 
+        public string ServerAddress
+        {
+            get => this.RawData.Substring(this.ServerAddressIndex, this.ServerAddressLength);
+
+            set => this.RawData =
+                this.RawData
+                    .Remove(this.ServerAddressIndex, this.ServerAddressLength)
+                    .Insert(this.ServerAddressIndex, value);
+        }
+        
+        public int ServerAddressIndex => 3 * this.UsernameLength + 4;
+
+        public int ServerAddressLength
+            => this.CommandTypeIndex - this.ServerAddressIndex - 1;
+
         public IrcResponse() : base()
         {
             this.CommandTypeIndex = this.GetCommandTypeIndex();
@@ -42,7 +57,12 @@ namespace IrcClient.Commands.Responses
 
         private int GetCommandTypeIndex()
         {
-            return this.RawData.IndexOf(this.RawData.First(x => x.Equals(char.ToUpper(x))));
+            if (this.RawData.Equals(string.Empty))
+            {
+                return 0;
+            }
+            
+            return this.RawData.IndexOf(this.RawData.First(x => x > 64 && x < 91));
         }
 
         private void SetUsername(string username)
