@@ -14,7 +14,7 @@ namespace IrcClient.Commands.Enums
         
         PART,
         
-        USER,
+        NICK,
         
         PASS
     }
