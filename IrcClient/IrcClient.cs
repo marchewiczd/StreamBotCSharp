@@ -1,79 +1,76 @@
 using System;
-using System.IO;
-using System.Net.Sockets;
+using System.Collections.Specialized;
+using IrcClient.Commands;
+using IrcClient.Commands.Requests;
+using IrcClient.Connection;
+using IrcClient.DataStream;
 
 namespace IrcClient
 {
     public class IrcClient
     {
-        public string userName;
-                private string channel;
-        
-                private TcpClient _tcpClient;
-                private StreamReader _inputStream;
-                private StreamWriter _outputStream;
-        
-                public IrcClient(string ip, int port, string userName, string password, string channel)
+        private string _address;
+        private int _port;
+        private string _nick;
+        private string _channel;
+        private string _oauth;
+        private Func<IrcCommand, IrcCommand> _clientActionMethod;
+        private IrcDataStream _dataStream;
+
+        public IrcClient(string address, int port, string nick, string channel, string oauth, Func<IrcCommand, IrcCommand> clientActionMethod)
+        {
+            this._address = address;
+            this._port = port;
+            this._nick = nick;
+            this._channel = channel;
+            this._oauth = oauth;
+            this._clientActionMethod = clientActionMethod;
+        }
+
+        public void Start()
+        {
+            using (var serverConnection = new TcpIpServerConnection(this._address, this._port))
+            using (this._dataStream =
+                new IrcDataStream(serverConnection.GetInputStream(), serverConnection.GetOutputStream()))
+            {
+                this._dataStream.AddCollectionChangedHandler(this.ReceivedNewCommandEventHandler);
+                this.Login();
+
+                char key;
+                do
                 {
-                    try
-                    {
-                        this.userName = userName;
-                        this.channel = channel;
-        
-                        _tcpClient = new TcpClient(ip, port);
-                        _inputStream = new StreamReader(_tcpClient.GetStream());
-                        _outputStream = new StreamWriter(_tcpClient.GetStream());
-        
-                        // Try to join the room
-                        _outputStream.WriteLine("PASS " + password);
-                        _outputStream.WriteLine("NICK " + userName);
-                        _outputStream.WriteLine("USER " + userName + " 8 * :" + userName);
-                        _outputStream.WriteLine("JOIN #" + channel);
-                        _outputStream.Flush();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-        
-                public void SendIrcMessage(string message)
-                {
-                    try
-                    {
-                        _outputStream.WriteLine(message);
-                        _outputStream.Flush();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-        
-                public void SendPublicChatMessage(string message)
-                {
-                    try
-                    {
-                        SendIrcMessage(":" + userName + "!" + userName + "@" + userName +
-                        ".tmi.twitch.tv PRIVMSG #" + channel + " :" + message);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-        
-                public string ReadMessage()
-                {
-                    try
-                    {
-                        string message = _inputStream.ReadLine();
-                        return message;
-                    }
-                    catch (Exception ex)
-                    {
-                        return "Error receiving message: " + ex.Message;
-                    }
-                }
+                    key = Console.ReadKey().KeyChar;
+                } while (key != 'x' && key != 'X');
             }
+        }
+
+        public void SetClientActionMethod(Func<IrcCommand, IrcCommand> ircClientAction)
+        {
+            this._clientActionMethod = ircClientAction;
+        }
+
+        public void ReceivedNewCommandEventHandler(object obj, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action != NotifyCollectionChangedAction.Add)
+            {
+                return;
+            }
+
+            IrcCommand receivedCommand = this._dataStream.GetReceivedCommand();
+            if (receivedCommand == null) return;
+            IrcCommand response = this._clientActionMethod.Invoke(receivedCommand);
+            if (response != null)
+            {
+                this._dataStream.SendCommand(response);
+            }
+        }
+
+        private void Login()
+        {
+            this._dataStream.SendRequest(new IrcPassRequest(this._oauth));
+            this._dataStream.SendRequest(new IrcNickRequest(this._nick));
+            this._dataStream.SendRequest(new IrcJoinRequest(this._channel));
+            this._dataStream.SendRequest(new IrcPrivmsgRequest(this._channel, "Hello there!"));
+        }
     }
+}
