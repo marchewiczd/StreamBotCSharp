@@ -5,10 +5,10 @@ using IrcClient.Commands.Enums;
 namespace IrcClient.Commands.Responses
 {
     /// <summary>
-    /// 
+    /// The IRC server response.
     /// </summary>
     /// <example>
-    /// Most common response format: :<user>!<user>@<user>.<address> <CommandType> #<channel>
+    /// Most common response format: :user!user@user.address CommandType #channel
     /// </example>
     public class IrcResponse : IrcCommand
     {
