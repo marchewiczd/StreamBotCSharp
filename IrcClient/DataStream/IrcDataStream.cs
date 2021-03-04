@@ -1,6 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using IrcClient.Commands;
 using IrcClient.Commands.Requests;
@@ -21,14 +23,12 @@ namespace IrcClient.DataStream
 
         private object _receivedCommandsLock = new();
 
-        private Task _commandReaderTask;
-
         public IrcDataStream(StreamReader inputStream, StreamWriter outputStream)
         {
             this._inputStream = inputStream ?? throw new ArgumentNullException(nameof(inputStream));
             this._outputStream = outputStream ?? throw new ArgumentNullException(nameof(outputStream));
 
-            this._commandReaderTask = Task.Factory.StartNew(this.ReadRequests);
+            Task.Factory.StartNew(this.ReadRequests);
         }
         
         public void SendRaw(string rawCommand)
@@ -56,7 +56,7 @@ namespace IrcClient.DataStream
         {
             lock (this._receivedCommandsLock)
             {
-                if (_receivedCommands.Count <= 0)
+                if (!this._receivedCommands.Any())
                 {
                     return null;
                 }
@@ -65,6 +65,22 @@ namespace IrcClient.DataStream
                 this._receivedCommands.RemoveAt(0);
 
                 return receivedCommand;
+            }
+        }
+
+        public bool ContainsUnprocessedCommands()
+        {
+            lock (this._receivedCommandsLock)
+            {
+                return this._receivedCommands.Any();
+            }
+        }
+
+        public void AddCollectionChangedHandler(NotifyCollectionChangedEventHandler eventHandler)
+        {
+            lock (this._receivedCommandsLock)
+            {
+                this._receivedCommands.CollectionChanged += eventHandler;
             }
         }
 
