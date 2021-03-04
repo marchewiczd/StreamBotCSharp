@@ -5,7 +5,7 @@ using IrcClient.Commands.Enums;
 
 namespace IrcClient.Commands
 {
-    public abstract class IrcCommand
+    public class IrcCommand
     {
         #region Constructors
         
@@ -72,11 +72,16 @@ namespace IrcClient.Commands
 
         protected CommandTypeEnum GetCommandType()
         {
-            string foundType = this.RawData.Split(' ').First(x => x.Equals(x.ToUpper()));            
-            return foundType.Equals(string.Empty) ? CommandTypeEnum.Unspecified : Enum.Parse<CommandTypeEnum>(foundType);
+            string foundType = this.RawData.Split(' ').FirstOrDefault(x => x.Equals(x.ToUpper()) && x[0] > 64 && x[0] < 91) ?? string.Empty;
+            CommandTypeEnum foundTypeEnum = CommandTypeEnum.Unspecified;
+            Enum.TryParse(foundType, out foundTypeEnum);
+            return foundTypeEnum;
         }
-        
-        protected abstract void SetCommandType(CommandTypeEnum commandType);
+
+        protected virtual void SetCommandType(CommandTypeEnum commandType)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion        
     }
