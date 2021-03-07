@@ -4,7 +4,7 @@ namespace IrcClient.Commands.Requests
     {
         public IrcPassRequest(string oauthPass)
         {
-            this.RawData = $"PASS #{oauthPass}";
+            this.RawData = $"PASS {oauthPass}";
         }
     }
 }
