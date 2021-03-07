@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\IrcClient\IrcClient.csproj" />
+      <ProjectReference Include="..\StreamBotConfig\StreamBotConfig.csproj" />
     </ItemGroup>
 
 </Project>
