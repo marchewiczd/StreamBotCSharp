@@ -40,6 +40,14 @@ namespace StreamBotTests.IrcClient.Commands
         }
 
         [Fact]
+        public void GetCommandTypeFromEmptyRawData()
+        {
+            IrcRequest request = new IrcRequest();
+
+            Assert.Equal(CommandTypeEnum.Unspecified, request.CommandType);
+        }
+
+        [Fact]
         public void UpdateRawDataByCommandType()
         {
             const string exampleRequestRawData = "PING :tmi.twitch.tv";

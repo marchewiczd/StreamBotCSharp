@@ -1,30 +1,56 @@
+using System;
+using IrcClient.Commands;
+using StreamBotCsharp.Handlers;
+
 namespace StreamBotCsharp.Drivers
 {
+    using StreamBotConfig.Configs;
+
+    using IrcClient = IrcClient.IrcClient;
+
     public class TwitchDriver : IDriver
     {
-        public void Dispose()
+        private const string TwitchIrcAddress = "irc.twitch.tv";
+
+        private const int TwitchPort = 6667;
+
+        private IrcClient _ircClient;
+
+        private readonly CommandHandler _commandHandler;
+
+        private readonly Config _config;
+
+        private bool _isPrepared = false;
+
+        public TwitchDriver(Config config)
         {
-            throw new System.NotImplementedException();
+            this._config = config;
+            this._commandHandler = new CommandHandler(config);
         }
 
-        public void Listen()
+        public void Prepare()
         {
-            throw new System.NotImplementedException();
+            this._ircClient =
+                new IrcClient(
+                    TwitchIrcAddress,
+                    TwitchPort,
+                    this._config.Credentials.Username,
+                    this._config.Credentials.Channel,
+                    this._config.Credentials.Password,
+                    this._commandHandler.HandleUserCommands
+                );
+
+            this._isPrepared = true;
         }
 
-        public bool Connect()
+        public void Start()
         {
-            throw new System.NotImplementedException();
-        }
+            if (!this._isPrepared)
+            {
+                Console.WriteLine("Can't start Twitch driver - prepare not run.");
+            }
 
-        public bool IsConnected()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool Disconnect()
-        {
-            throw new System.NotImplementedException();
+            this._ircClient.Start();
         }
     }
 }

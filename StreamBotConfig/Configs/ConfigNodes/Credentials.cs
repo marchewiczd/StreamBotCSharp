@@ -8,6 +8,8 @@
 
         public string Password { get; set; }
 
+        public string Channel { get; set; }
+
         public string Platform { get; set; }
 
         #endregion
