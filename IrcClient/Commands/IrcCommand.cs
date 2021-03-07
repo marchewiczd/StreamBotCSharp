@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IrcClient.Commands.Enums;
+using StreamBotExtensions;
 
 namespace IrcClient.Commands
 {
     public class IrcCommand
     {
         #region Constructors
-        
+
         public IrcCommand()
         {
             this.RawData = "";
@@ -20,11 +21,11 @@ namespace IrcClient.Commands
         }
 
         #endregion
-        
+
         #region Properties
-        
+
         public string RawData { get; protected set; }
-        
+
         public int CommandTypeIndex { get; protected set; }
 
         public CommandTypeEnum CommandType
@@ -32,7 +33,7 @@ namespace IrcClient.Commands
             get => this.GetCommandType();
             set => this.SetCommandType(value);
         }
-        
+
         public int PayloadIndex
         {
             get
@@ -46,7 +47,7 @@ namespace IrcClient.Commands
                 {
                     return 1;
                 }
-            
+
                 return this.CommandTypeIndex + this.CommandType.ToString().Length + 1;
             }
         }
@@ -61,7 +62,7 @@ namespace IrcClient.Commands
                 {
                     this.RawData = $" {value}";
                 }
-                
+
                 this.RawData = this.RawData.Remove(this.PayloadIndex).Insert(this.PayloadIndex, value);
             }
         }
@@ -72,7 +73,7 @@ namespace IrcClient.Commands
 
         protected CommandTypeEnum GetCommandType()
         {
-            string foundType = this.RawData.Split(' ').FirstOrDefault(x => x.Equals(x.ToUpper()) && x[0] > 64 && x[0] < 91) ?? string.Empty;
+            string foundType = this.RawData.Split(' ').FirstOrDefault(x => x.Equals(x.ToUpper()) && x.FirstCharIsCapitalLetter()) ?? string.Empty;
             CommandTypeEnum foundTypeEnum = CommandTypeEnum.Unspecified;
             Enum.TryParse(foundType, out foundTypeEnum);
             return foundTypeEnum;
@@ -83,6 +84,6 @@ namespace IrcClient.Commands
             throw new NotImplementedException();
         }
 
-        #endregion        
+        #endregion
     }
 }
