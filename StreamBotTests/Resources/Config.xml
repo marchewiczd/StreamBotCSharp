@@ -1,0 +1,14 @@
+<Config>
+  <Global>
+    <AllowModAddCommand>true</AllowModAddCommand>
+    <SendJoinMessage Text="">true</SendJoinMessage>
+  </Global>
+  <TextCommands>
+    <TexCommand Trigger="" Answer=""/>
+  </TextCommands>
+  <Credentials>
+    <Username></Username>
+    <Password></Password>
+    <Platform></Platform>
+  </Credentials>
+</Config>
