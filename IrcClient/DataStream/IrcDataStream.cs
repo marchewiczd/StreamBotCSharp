@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IrcClient.Commands;
+using IrcClient.Commands.Enums;
 using IrcClient.Commands.Requests;
 using IrcClient.Commands.Responses;
 using IrcClient.Interfaces;
@@ -30,9 +31,14 @@ namespace IrcClient.DataStream
 
             Task.Factory.StartNew(this.ReadRequests);
         }
-        
+
         public void SendRaw(string rawCommand)
         {
+            if (!rawCommand.Contains(CommandTypeEnum.PASS.ToString()))
+            {
+                Console.WriteLine(rawCommand);
+            }
+
             this._outputStream.WriteLine(rawCommand);
             this._outputStream.Flush();
         }
@@ -51,7 +57,7 @@ namespace IrcClient.DataStream
         {
             this.SendRaw(command.RawData);
         }
-        
+
         public IrcCommand GetReceivedCommand()
         {
             lock (this._receivedCommandsLock)
@@ -60,7 +66,7 @@ namespace IrcClient.DataStream
                 {
                     return null;
                 }
-                
+
                 IrcCommand receivedCommand = this._receivedCommands[0];
                 this._receivedCommands.RemoveAt(0);
 
@@ -91,11 +97,11 @@ namespace IrcClient.DataStream
             while (this._keepReadingInput)
             {
                 string rawData = this._inputStream.ReadLine();
-                
+
                 lock (this._receivedCommandsLock)
                 {
-                    this._receivedCommands.Add(new IrcCommand(rawData));
                     Console.WriteLine(rawData);
+                    this._receivedCommands.Add(new IrcCommand(rawData));
                 }
             }
         }
