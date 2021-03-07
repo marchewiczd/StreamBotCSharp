@@ -1,14 +1,11 @@
-using System.Runtime.CompilerServices;
-
-namespace IrcClient.Commands.Requests
+namespace IrcClient.Commands.Responses
 {
-    public class IrcPrivmsgRequest : IrcChannelRequest
+    public class IrcPrivmsgResponse : IrcResponse
     {
-        public IrcPrivmsgRequest(string channel, string message)
+        public IrcPrivmsgResponse(string rawData) : base(rawData)
         {
-            this.RawData = $"PRIVMSG #{channel} :{message}";
         }
-
+        
         public string Message
         {
             get => this.RawData[this.MessageIndex..];
@@ -18,8 +15,7 @@ namespace IrcClient.Commands.Requests
                 this.RawData = this.RawData.Remove(this.MessageIndex).Insert(this.MessageIndex, value);
             }
         }
-
+        
         public int MessageIndex => this.ChannelIndex + this.ChannelStringLength + 2;
-
     }
 }

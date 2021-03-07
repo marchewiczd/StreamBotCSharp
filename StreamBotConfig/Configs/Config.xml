@@ -1,0 +1,14 @@
+<Config>
+  <Global>
+    <AllowModAddCommand>true</AllowModAddCommand>
+    <SendJoinMessage Text="Hello!">true</SendJoinMessage>
+  </Global>
+  <TextCommands>
+    <TexCommand Trigger="!helloworld" Answer="Hello!"/>
+  </TextCommands>
+  <Credentials>
+    <Username>exampleUsername</Username>
+    <Password>examplePassword</Password>
+    <Platform>Twitch</Platform>
+  </Credentials>
+</Config>

@@ -1,22 +1,15 @@
 namespace StreamBotCsharp.Drivers
 {
     #region Usings
-    
+
     using System;
-    
+
     #endregion
-    
-    public interface IDriver : IDisposable
+
+    public interface IDriver
     {
-        public void Listen();
-        
-        
-        public bool Connect();
-        
-        
-        public bool IsConnected();
-        
-        
-        public bool Disconnect();
+        public void Prepare();
+
+        public void Start();
     }
 }
