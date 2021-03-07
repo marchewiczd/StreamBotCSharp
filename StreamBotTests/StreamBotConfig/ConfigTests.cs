@@ -20,13 +20,5 @@ namespace StreamBotTests.StreamBotConfig
 
             Assert.Null(conf);
         }
-
-        [Fact]
-        public void DeserializeFileFound()
-        {
-            Config conf = Config.Deserialize("Config.xml");
-
-            Assert.NotNull(conf);
-        }
     }
 }

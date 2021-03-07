@@ -28,10 +28,4 @@
       <ProjectReference Include="..\StreamBotConfig\StreamBotConfig.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="Resources\Config.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>
