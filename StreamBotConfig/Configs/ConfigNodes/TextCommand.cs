@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-
-namespace StreamBotConfig.Configs.ConfigNodes
+﻿namespace StreamBotConfig.Configs.ConfigNodes
 {
+    #region Usings
+
+    using System.Xml.Serialization;
+
+    #endregion
+
     public class TextCommand
     {
+        #region Properties
+
         [XmlAttribute]
         public string Trigger { get; set; }
 
         [XmlAttribute]
         public string Answer { get; set; }
+
+        #endregion
     }
 }

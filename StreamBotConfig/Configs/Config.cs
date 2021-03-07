@@ -1,20 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using StreamBotConfig.Configs.ConfigNodes;
-
-namespace StreamBotConfig.Configs
+﻿namespace StreamBotConfig.Configs
 {
+    #region Usings
+
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using System.Xml.Serialization;
+
+    using ConfigNodes;
+
+    #endregion
+
     public class Config
     {
+        #region Fields and Constants
+
         [XmlIgnore]
         private static readonly string DefaultPath = $"{System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}\\Config.xml";
 
+        #endregion
+
+        #region Properties
 
         public List<TextCommand> TextCommands { get; set; }
 
@@ -22,6 +29,9 @@ namespace StreamBotConfig.Configs
 
         public Credentials Credentials { get; set; }
 
+        #endregion
+
+        #region Static Methods
 
         public static Config Deserialize(string fullConfigPath = null)
         {
@@ -40,8 +50,14 @@ namespace StreamBotConfig.Configs
             {
                 Console.WriteLine($"Cannot open {path}. File not found!");
             }
+            catch (DirectoryNotFoundException)
+            {
+                Console.WriteLine($"Cannot find {path}. Directory not found!");
+            }
 
             return null;
         }
+
+        #endregion
     }
 }
