@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Specialized;
 using IrcClient.Commands;
+using IrcClient.Commands.Enums;
 using IrcClient.Commands.Requests;
+using IrcClient.Commands.Responses;
 using IrcClient.Connection;
 using IrcClient.DataStream;
 
@@ -58,12 +60,20 @@ namespace IrcClient
 
             IrcCommand receivedCommand = this._dataStream.GetReceivedCommand();
             if (receivedCommand == null) return;
+
+            if (receivedCommand.CommandType == CommandTypeEnum.PING)
+            {
+                this._dataStream.SendCommand(new IrcPongResponse());
+                return;
+            }
+
             IrcCommand response = this._clientActionMethod.Invoke(receivedCommand);
             if (response != null)
             {
                 this._dataStream.SendCommand(response);
             }
         }
+
 
         private void Login()
         {
